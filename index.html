@@ -1,15 +1,102 @@
-// ตัวอย่างการส่งข้อมูลจาก GitHub ไปยัง GAS
-async function login() {
-    const pass = document.getElementById('passInput').value;
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbyrvutzORy9hUW7E8nBcL8e0SBByFrp-gDo4sgUBSHajhfnkzN9iGOAbOHtfmU06drv_A/exec";
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Dashboard - CH Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* ใช้ CSS เดิมที่คุณชอบได้เลยครับ ผมจะเน้นที่ส่วน JavaScript */
+    :root { --primary: #3b82f6; --dark: #0f172a; --soft-bg: #f8fafc; }
+    body { font-family: 'Kanit', sans-serif; background-color: var(--soft-bg); margin: 0; }
+    #loginPage { background: var(--dark); height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-box { background: white; padding: 40px; border-radius: 30px; width: 100%; max-width: 400px; text-align: center; }
+    .top-nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .cust-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; border-radius: 25px; padding: 30px; }
+    .cust-card .form-control { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; }
+    .order-card { background: #eff6ff; border: 1px solid #dbeafe; border-radius: 25px; padding: 30px; }
+    .btn-main { background: #10b981; color: white; border: none; border-radius: 15px; padding: 18px; font-weight: 600; width: 100%; transition: 0.3s; }
+    #loader { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; justify-content:center; align-items:center; }
+  </style>
+</head>
+<body>
 
-    const response = await fetch(webAppUrl, {
-        method: 'POST',
-        body: JSON.stringify({ action: "login", pass: pass })
-    });
-    const res = await response.json();
-    
-    if(res) {
-        // เข้าระบบสำเร็จ
+<div id="loader"><div class="spinner-border text-primary"></div></div>
+
+<div id="loginPage">
+  <div class="login-box">
+    <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" style="width: 100px; border-radius: 50%; margin-bottom: 20px;">
+    <h3 class="fw-bold">CH-MANAGEMENT</h3>
+    <input type="password" id="passInput" class="form-control text-center mb-4 py-3" placeholder="••••" maxlength="4" style="font-size: 2rem; letter-spacing: 15px;" onkeypress="if(event.key==='Enter')login()">
+    <button class="btn btn-primary w-100 py-3 fw-bold rounded-4" onclick="login()">เข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<div id="mainPage" style="display:none;">
+    </div>
+
+<script>
+  // 🌟 จุดสำคัญ: ใส่ URL ของ Web App ที่ก๊อปปี้มาจาก Google ตรงนี้
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzHlW9RjF6KxmIQGvmuKSJnjkNDiEfrs1M7BYJxOkZ51czCgaVUkNbQTdLBGVp9ATos/exec";
+
+  async function apiCall(payload) {
+    showL();
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      hideL();
+      return data;
+    } catch (err) {
+      hideL();
+      Swal.fire("Error", "การเชื่อมต่อฐานข้อมูลผิดพลาด", "error");
+      return null;
     }
-}
+  }
+
+  // แก้ไขฟังก์ชันเดิมให้เรียกผ่าน apiCall
+  async function login() {
+    const pass = document.getElementById('passInput').value;
+    const res = await apiCall({ action: "login", pass: pass });
+    if(res) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('mainPage').style.display = 'block';
+      updateIds();
+    } else { Swal.fire('Error', 'รหัสผ่านผิด', 'error'); }
+  }
+
+  async function updateIds() {
+    const res = await apiCall({ action: "getNextIds" });
+    if(res) {
+      document.getElementById('c_id').value = res.custId;
+      document.getElementById('o_id').value = res.orderId;
+    }
+  }
+
+  async function searchCust() {
+    const q = document.getElementById('searchInput').value;
+    const res = await apiCall({ action: "search", query: q });
+    if(res) {
+       // ใส่ข้อมูลลงฟอร์มและโชว์ Swal (เหมือนเดิม)
+    }
+  }
+
+  async function submitAll() {
+    const data = { /* ดึงค่าจากฟอร์มเหมือนเดิม */ };
+    const res = await apiCall({ action: "save", data: data });
+    if(res) {
+      Swal.fire('สำเร็จ', res, 'success');
+      updateIds();
+    }
+  }
+
+  // ฟังก์ชันช่วยเหลืออื่นๆ
+  const showL = () => document.getElementById('loader').style.display = 'flex';
+  const hideL = () => document.getElementById('loader').style.display = 'none';
+</script>
+</body>
+</html>
