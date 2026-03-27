@@ -1,0 +1,15 @@
+// ตัวอย่างการส่งข้อมูลจาก GitHub ไปยัง GAS
+async function login() {
+    const pass = document.getElementById('passInput').value;
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbyrvutzORy9hUW7E8nBcL8e0SBByFrp-gDo4sgUBSHajhfnkzN9iGOAbOHtfmU06drv_A/exec";
+
+    const response = await fetch(webAppUrl, {
+        method: 'POST',
+        body: JSON.stringify({ action: "login", pass: pass })
+    });
+    const res = await response.json();
+    
+    if(res) {
+        // เข้าระบบสำเร็จ
+    }
+}
