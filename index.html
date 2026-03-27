@@ -3,96 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CH-MANAGEMENT DASHBOARD</title>
-  
+  <title>Sales Dashboard - CH Management</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
   <style>
-    :root {
-      --primary: #2563eb;
-      --dark: #0f172a;
-      --soft-bg: #f1f5f9;
-      --accent: #6366f1;
-    }
-
-    body {
-      font-family: 'Kanit', sans-serif;
-      background-color: var(--soft-bg);
-      margin: 0;
-      color: var(--dark);
-    }
-
-    /* --- Login Screen --- */
-    #loginPage {
-      background: var(--dark);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 2000;
-    }
-    .login-box {
-      background: white;
-      padding: 40px;
-      border-radius: 30px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-    }
-    .login-logo {
-      width: 100px; height: 100px; border-radius: 50%;
-      object-fit: cover; margin-bottom: 20px; border: 4px solid #f1f5f9;
-    }
-
-    /* --- Dashboard Header --- */
-    .top-nav {
-      background: white; border-bottom: 1px solid #e2e8f0;
-      padding: 12px 30px; display: flex; align-items: center;
-      justify-content: space-between; position: sticky; top: 0; z-index: 100;
-    }
-    .logo-img { width: 40px; border-radius: 8px; }
-
-    /* --- Content Cards --- */
-    .main-content { padding: 25px; max-width: 1400px; margin: auto; }
-    
-    .cust-card {
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-      color: white; border-radius: 25px; padding: 30px; border: none;
-      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-    }
-    .cust-card .form-control {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: white; border-radius: 12px;
-    }
-    .cust-card .form-control::placeholder { color: rgba(255,255,255,0.5); }
-
-    .order-card {
-      background: #eff6ff; border: 1px solid #dbeafe;
-      border-radius: 25px; padding: 30px;
-    }
-
-    .btn-main {
-      background: #10b981; color: white; border: none;
-      border-radius: 15px; padding: 18px; font-weight: 600;
-      width: 100%; transition: 0.3s; font-size: 1.1rem;
-    }
-    .btn-main:hover:not(:disabled) { transform: translateY(-3px); background: #059669; }
+    :root { --primary: #2563eb; --dark: #0f172a; --soft-bg: #f1f5f9; }
+    body { font-family: 'Kanit', sans-serif; background-color: var(--soft-bg); margin: 0; }
+    #loginPage { background: var(--dark); height: 100vh; display: flex; align-items: center; justify-content: center; position: fixed; width: 100%; top: 0; z-index: 2000; }
+    .login-box { background: white; padding: 40px; border-radius: 30px; width: 100%; max-width: 400px; text-align: center; }
+    .top-nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .cust-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; border-radius: 25px; padding: 25px; border: none; }
+    .cust-card .form-control { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 12px; }
+    .order-card { background: #eff6ff; border: 1px solid #dbeafe; border-radius: 25px; padding: 25px; }
+    .btn-main { background: #10b981; color: white; border: none; border-radius: 15px; padding: 18px; font-weight: 600; width: 100%; transition: 0.3s; font-size: 1.1rem; }
     .btn-main:disabled { background: #6b7280; opacity: 0.7; }
-
-    /* --- UI Components --- */
-    #loader {
-      display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(255,255,255,0.8); z-index:9999; justify-content:center; align-items:center;
-    }
-    .search-group { background: #f1f5f9; border-radius: 15px; padding: 5px; display: flex; width: 100%; max-width: 500px; }
+    #loader { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; justify-content:center; align-items:center; }
   </style>
 </head>
 <body>
@@ -100,93 +27,62 @@
 <div id="loader"><div class="spinner-border text-primary" role="status"></div></div>
 
 <div id="loginPage">
-  <div class="login-box">
-    <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" class="login-logo">
-    <h3 class="fw-bold">CH-MANAGEMENT</h3>
-    <p class="text-muted small mb-4">ระบบจัดการงานขายอัจฉริยะ</p>
+  <div class="login-box shadow-lg">
+    <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" style="width: 100px; border-radius: 50%; margin-bottom: 20px;">
+    <h3 class="fw-bold mb-4">CH-MANAGEMENT</h3>
     <input type="password" id="passInput" class="form-control text-center mb-4 py-3" placeholder="••••" maxlength="4" style="font-size: 2rem; letter-spacing: 12px; border-radius: 15px;" onkeypress="if(event.key==='Enter')login()">
-    <button id="loginBtn" class="btn btn-primary w-100 py-3 rounded-4 fw-bold shadow" onclick="login()">เข้าสู่ระบบ</button>
+    <button id="loginBtn" class="btn btn-primary w-100 py-3 rounded-4 fw-bold" onclick="login()">เข้าสู่ระบบ</button>
   </div>
 </div>
 
 <div id="mainPage" style="display:none;">
   <div class="top-nav shadow-sm">
     <div class="d-flex align-items-center">
-      <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" class="logo-img">
-      <span class="ms-3 fw-bold fs-5 d-none d-md-inline">SALES DASHBOARD</span>
+      <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" style="width: 40px; border-radius: 8px;">
+      <span class="ms-3 fw-bold d-none d-md-inline">CH-MANAGEMENT</span>
     </div>
-    <div class="d-flex align-items-center gap-2 w-100 justify-content-end">
-      <div class="search-group">
-        <input type="text" id="searchInput" class="form-control border-0 bg-transparent" placeholder="ค้นหา ชื่อ / เบอร์โทร..." onkeypress="if(event.key==='Enter')searchCust()">
-        <button class="btn btn-dark rounded-3 px-3 mx-1" onclick="searchCust()">ค้นหา</button>
-        <button class="btn btn-outline-secondary rounded-3 border-0" onclick="clearAllForm()"><i class="fa-solid fa-eraser"></i> ล้าง</button>
+    <div class="d-flex align-items-center gap-2">
+      <div class="input-group" style="max-width: 450px;">
+        <input type="text" id="searchInput" class="form-control" placeholder="ค้นหา ชื่อ / เบอร์โทร" onkeypress="if(event.key==='Enter')searchCust()">
+        <button class="btn btn-dark" onclick="searchCust()">ค้นหา</button>
+        <button class="btn btn-outline-secondary" onclick="manualClear()"><i class="fa-solid fa-eraser"></i></button>
       </div>
-      <button class="btn btn-outline-danger border-0 ms-2" onclick="location.reload()"><i class="fa-solid fa-power-off"></i></button>
+      <button class="btn btn-outline-danger ms-2 border-0" onclick="location.reload()"><i class="fa-solid fa-power-off"></i></button>
     </div>
   </div>
 
-  <div class="main-content">
+  <div class="container-fluid p-4">
     <div class="row g-4">
       <div class="col-lg-4">
         <div class="cust-card h-100 shadow">
           <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-tag me-2"></i> ข้อมูลลูกค้า</h5>
-          <div class="row g-2 mb-3 text-center">
-            <div class="col-6">
-              <label class="small opacity-75">รหัสลูกค้า</label>
-              <input type="text" id="c_id" class="form-control fw-bold text-center" readonly>
-            </div>
-            <div class="col-6">
-              <label class="small opacity-75">วันที่ซื้อล่าสุด</label>
-              <input type="text" id="c_last_date" class="form-control text-center" readonly placeholder="-">
-            </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6"><label class="small opacity-75">รหัสลูกค้า</label><input type="text" id="c_id" class="form-control fw-bold text-center" readonly></div>
+            <div class="col-6"><label class="small opacity-75">ซื้อล่าสุด</label><input type="text" id="c_last_date" class="form-control text-center" readonly placeholder="-"></div>
           </div>
-          <div class="mb-3">
-            <label class="small opacity-75">ชื่อ-นามสกุล</label>
-            <input type="text" id="c_name" class="form-control" placeholder="ระบุชื่อ">
-          </div>
-          <div class="mb-3">
-            <label class="small opacity-75">เบอร์โทรศัพท์</label>
-            <input type="text" id="c_phone" class="form-control" placeholder="08x-xxx-xxxx">
-          </div>
-          <div class="mb-0">
-            <label class="small opacity-75">ที่อยู่จัดส่ง</label>
-            <textarea id="c_address" class="form-control" rows="6" placeholder="ที่อยู่แบบละเอียด..."></textarea>
-          </div>
+          <div class="mb-3"><label>ชื่อ-นามสกุล</label><input type="text" id="c_name" class="form-control" placeholder="ระบุชื่อ"></div>
+          <div class="mb-3"><label>เบอร์โทร</label><input type="text" id="c_phone" class="form-control" placeholder="08x-xxx-xxxx"></div>
+          <div class="mb-0"><label>ที่อยู่</label><textarea id="c_address" class="form-control" rows="5" placeholder="ที่อยู่..."></textarea></div>
         </div>
       </div>
-
       <div class="col-lg-8">
         <div class="order-card h-100 shadow-sm">
-          <h5 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-cart-shopping me-2"></i> บันทึกรายการใหม่</h5>
+          <h5 class="fw-bold mb-4 text-primary"><i class="fa-solid fa-cart-plus me-2"></i> บันทึกรายการใหม่</h5>
           <div class="row g-3 mb-4">
-            <div class="col-md-4">
-              <label class="form-label">วันที่ทำรายการ</label>
-              <input type="date" id="o_date" class="form-control bg-white">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">เลขที่ออเดอร์ (Auto)</label>
-              <input type="text" id="o_id" class="form-control bg-light fw-bold" readonly>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">รายการสินค้า</label>
-              <input type="text" id="o_item" class="form-control" placeholder="ชื่อสินค้า">
-            </div>
+            <div class="col-md-4"><label>วันที่</label><input type="date" id="o_date" class="form-control bg-white"></div>
+            <div class="col-md-4"><label>เลขที่ออเดอร์</label><input type="text" id="o_id" class="form-control bg-light fw-bold" readonly></div>
+            <div class="col-md-4"><label>รายการสินค้า</label><input type="text" id="o_item" class="form-control bg-white"></div>
           </div>
-          
           <div class="row g-3 mb-4 text-center">
-            <div class="col-4"><label class="form-label">ต้นทุน</label><input type="number" id="o_cost" class="form-control text-danger fw-bold" value="0"></div>
-            <div class="col-4"><label class="form-label">ราคาขาย</label><input type="number" id="o_price" class="form-control text-success fw-bold" value="0"></div>
-            <div class="col-4"><label class="form-label">จำนวน</label><input type="number" id="o_qty" class="form-control" value="1"></div>
+            <div class="col-4"><label>ต้นทุน</label><input type="number" id="o_cost" class="form-control text-danger fw-bold" value="0"></div>
+            <div class="col-4"><label>ราคาขาย</label><input type="number" id="o_price" class="form-control text-success fw-bold" value="0"></div>
+            <div class="col-4"><label>จำนวน</label><input type="number" id="o_qty" class="form-control" value="1"></div>
           </div>
-
           <div class="row g-3 mb-5">
-            <div class="col-6"><label class="form-label">ค่าส่ง</label><input type="number" id="o_ship" class="form-control" value="0"></div>
-            <div class="col-6"><label class="form-label">ส่วนลด</label><input type="number" id="o_disc" class="form-control text-primary" value="0"></div>
+            <div class="col-6"><label>ค่าส่ง</label><input type="number" id="o_ship" class="form-control" value="0"></div>
+            <div class="col-6"><label>ส่วนลด</label><input type="number" id="o_disc" class="form-control text-primary" value="0"></div>
           </div>
-
-          <button id="submitBtn" class="btn-main" onclick="submitAll()">
-            <i class="fa-solid fa-save me-2"></i> บันทึกรายการขายและลูกค้าทั้งหมด
-          </button>
+          <button id="submitBtn" class="btn-main shadow" onclick="submitAll()"><i class="fa-solid fa-save me-2"></i> บันทึกรายการขายทั้งหมด</button>
         </div>
       </div>
     </div>
@@ -194,10 +90,10 @@
 </div>
 
 <script>
-  // 🌟 [สำคัญที่สุด] วางลิงก์ WEB APP URL ของคุณที่นี่
-  const API_URL = "https://script.google.com/macros/s/AKfycbzU8sD_uKbNUsmccv88vyL3h93U1hYoTSPzjae_VK0iuQloBotvaZUuVHqK1OaGGRvCMQ/exec";
+  // 🌟 [สำคัญ] วาง URL ของคุณที่นี่
+  const API_URL = "https://script.google.com/macros/s/AKfycbx6scLIvWjxwPsiRONsqxc4NR9UaxsWu3D448PdqgrpQ6I4zhHmJqtoL89Aq3vO_v2aTA/exec";
 
-  let logoutTimer;
+  let timer;
   const showL = () => { document.getElementById('loader').style.display = 'flex'; toggleBtns(true); }
   const hideL = () => { document.getElementById('loader').style.display = 'none'; toggleBtns(false); }
   const toggleBtns = (s) => { document.getElementById('submitBtn').disabled = s; document.getElementById('loginBtn').disabled = s; }
@@ -211,22 +107,17 @@
     } catch (err) { hideL(); Swal.fire('Error', 'การเชื่อมต่อขัดข้อง', 'error'); return null; }
   }
 
-  function startTimer() {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => { Swal.fire('หมดเวลา', 'ระบบล็อกเอาท์อัตโนมัติ', 'info').then(() => location.reload()); }, 900000); 
-  }
-
   async function login() {
     const pass = document.getElementById('passInput').value;
     const res = await callAPI("login", { pass: pass });
     if(res && res.success) {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('mainPage').style.display = 'block';
+      document.getElementById('o_date').value = new Date().toISOString().split('T')[0];
       document.getElementById('c_id').value = res.nextIds.custId;
       document.getElementById('o_id').value = res.nextIds.orderId;
-      document.getElementById('o_date').value = new Date().toISOString().split('T')[0];
       startTimer(); window.onclick = startTimer;
-    } else { Swal.fire('รหัสผ่านผิด', 'ลองใหม่อีกครั้งครับ', 'error'); }
+    } else { Swal.fire('Error', 'รหัสผ่านผิด', 'error'); }
   }
 
   async function searchCust() {
@@ -239,12 +130,31 @@
       document.getElementById('c_phone').value = res.phone;
       document.getElementById('c_address').value = res.address;
       document.getElementById('c_last_date').value = res.lastDate;
-      Swal.fire({
-        title: 'ประวัติลูกค้า',
-        html: `<div class="text-start"><b>ชื่อ:</b> ${res.name}<br><b>ซื้อรวม:</b> <span class="text-success">฿${res.totalSpent.toLocaleString()}</span><br><b>สั่งมาแล้ว:</b> ${res.orderCount} ครั้ง<br><b>ล่าสุด:</b> ${res.lastDate}</div>`,
-        icon: 'success'
-      });
-    } else { Swal.fire('ไม่พบข้อมูล', 'ไม่พบรายชื่อนี้', 'warning'); }
+      Swal.fire({ title: 'ประวัติลูกค้า', html: `<div class="text-start"><b>ชื่อ:</b> ${res.name}<br><b>สะสม:</b> <span class="text-success">฿${res.totalSpent.toLocaleString()}</span><br><b>สั่งซื้อ:</b> ${res.orderCount} ครั้ง<br><b>ล่าสุด:</b> ${res.lastDate}</div>`, icon: 'success' });
+    } else { Swal.fire('ไม่พบข้อมูล', 'ไม่พบชื่อหรือเบอร์นี้', 'warning'); }
+  }
+
+  // ฟังก์ชันล้างข้อมูลทั้งหมด (เงียบๆ)
+  async function clearFormSilent() {
+    document.querySelectorAll('input:not([readonly])').forEach(i => i.value = "");
+    document.getElementById('c_address').value = "";
+    document.getElementById('o_cost').value = 0;
+    document.getElementById('o_price').value = 0;
+    document.getElementById('o_qty').value = 1;
+    document.getElementById('o_ship').value = 0;
+    document.getElementById('o_disc').value = 0;
+    document.getElementById('o_date').value = new Date().toISOString().split('T')[0];
+    const res = await callAPI("getNextIds");
+    if(res) {
+      document.getElementById('c_id').value = res.custId;
+      document.getElementById('o_id').value = res.orderId;
+    }
+  }
+
+  // ฟังก์ชันกดล้างข้อมูลเอง (มี Alert)
+  function manualClear() {
+    clearFormSilent();
+    Swal.fire({ icon: 'info', title: 'ล้างข้อมูลแล้ว', timer: 800, showConfirmButton: false });
   }
 
   async function submitAll() {
@@ -253,24 +163,22 @@
       orderDate: document.getElementById('o_date').value, orderId: document.getElementById('o_id').value, item: document.getElementById('o_item').value,
       cost: Number(document.getElementById('o_cost').value), price: Number(document.getElementById('o_price').value), qty: Number(document.getElementById('o_qty').value), shipping: Number(document.getElementById('o_ship').value), discount: Number(document.getElementById('o_disc').value)
     };
-    if(!data.name || !data.orderId) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณาระบุชื่อและออเดอร์', 'warning');
+    if(!data.name || !data.orderId) return Swal.fire('เตือน', 'กรุณาระบุชื่อและออเดอร์', 'warning');
 
     const res = await callAPI("save", data);
     if(res) {
       if(res.success) {
-        Swal.fire({ icon: 'success', title: res.message, timer: 1000, showConfirmButton: false });
-        document.getElementById('o_item').value = "";
-        document.getElementById('o_id').value = res.nextOrderId;
-      } else { Swal.fire('บันทึกซ้ำ', res.message, 'error'); }
+        // 1. แจ้งเตือน บันทึกสำเร็จ
+        Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false });
+        // 2. ล้างข้อมูลทั้งหมดเพื่อคีย์คนใหม่
+        clearFormSilent();
+      } else { 
+        Swal.fire('ไม่สำเร็จ', res.message, 'error'); 
+      }
     }
   }
 
-  function clearAllForm() {
-    document.querySelectorAll('input:not([readonly])').forEach(i => i.value = "");
-    document.getElementById('c_address').value = "";
-    document.getElementById('o_date').value = new Date().toISOString().split('T')[0];
-    callAPI("getNextIds").then(res => { if(res){ document.getElementById('c_id').value = res.custId; document.getElementById('o_id').value = res.orderId; } });
-  }
+  function startTimer() { clearTimeout(timer); timer = setTimeout(() => location.reload(), 900000); }
 </script>
 </body>
 </html>
