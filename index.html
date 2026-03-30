@@ -7,7 +7,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
@@ -15,46 +14,22 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    :root {
-      --bg: #f1f5f9;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --nav-bg: #ffffff;
-      --border: #e2e8f0;
-      --primary: #4f46e5;
-    }
-
-    /* 🌙 Dark Mode Styles */
-    body.dark-mode {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --nav-bg: #1e293b;
-      --border: #334155;
-    }
+    :root { --bg: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --nav-bg: #ffffff; --border: #e2e8f0; --primary: #4f46e5; }
+    body.dark-mode { --bg: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --nav-bg: #1e293b; --border: #334155; }
 
     body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); transition: 0.3s; margin: 0; }
-    
     .nav-tabs { background: var(--nav-bg); padding: 10px 25px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
     .nav-link { border: none !important; color: var(--text-muted); font-weight: 600; cursor: pointer; border-radius: 12px !important; margin-right: 10px; }
     .nav-link.active { background: var(--primary) !important; color: white !important; }
 
     .report-card { background: var(--card-bg); border-radius: 18px; padding: 15px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; }
-    .kpi-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
     .kpi-val { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
-
     .cust-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; border-radius: 25px; padding: 25px; }
     .cust-card .form-control { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; }
-    .cust-card .form-control::placeholder { color: rgba(255,255,255,0.6); }
     
-    /* Input colors for Dark Mode */
     body.dark-mode .form-control:not(.cust-card .form-control) { background-color: #0f172a; border-color: #334155; color: white; }
-
     #loginPage { position: fixed; inset: 0; background: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 2000; }
-    .login-card { background: var(--card-bg); color: var(--text-main); border-radius: 24px; padding: 2rem; width: 380px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    
+    .login-card { background: var(--card-bg); border-radius: 24px; padding: 2rem; width: 380px; }
     #loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; }
   </style>
 </head>
@@ -63,7 +38,7 @@
 <div id="loader"><div class="spinner-border text-light"></div></div>
 
 <div id="loginPage">
-  <div class="login-card text-center">
+  <div class="login-card text-center shadow-lg">
     <img src="https://i.postimg.cc/jjFG7ZmX/463627704-946416417505448-1269396498497011830-n.jpg" class="rounded-circle mx-auto mb-3" width="90">
     <h4 class="fw-bold">CH-MANAGEMENT</h4>
     <input type="password" id="passInput" class="form-control text-center my-4 py-3" placeholder="••••" maxlength="4" style="font-size: 2rem; letter-spacing: 10px;" onkeypress="if(event.key==='Enter') login()">
@@ -73,12 +48,10 @@
 
 <div id="mainPage" style="display:none;">
   <ul class="nav nav-tabs shadow-sm sticky-top">
-    <li class="nav-item"><a class="nav-link active" id="pos-tab" onclick="switchTab('pos')"><i class="fa-solid fa-cash-register me-2"></i>บันทึกยอด</a></li>
-    <li class="nav-item"><a class="nav-link" id="bi-tab" onclick="switchTab('bi')"><i class="fa-solid fa-chart-line me-2"></i>สรุปยอด (BI)</a></li>
+    <li class="nav-item"><a class="nav-link active" id="pos-tab" onclick="switchTab('pos')">บันทึกยอด</a></li>
+    <li class="nav-item"><a class="nav-link" id="bi-tab" onclick="switchTab('bi')">สรุปยอด (BI)</a></li>
     <li class="ms-auto d-flex align-items-center gap-2">
-      <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="toggleTheme()" id="themeToggle">
-        <i class="fa-solid fa-moon"></i>
-      </button>
+      <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="toggleTheme()" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
       <button onclick="location.reload()" class="btn btn-danger btn-sm rounded-pill px-3">ออก</button>
     </li>
   </ul>
@@ -96,14 +69,12 @@
             <input type="text" id="c_name" class="form-control mb-3" placeholder="ชื่อ-นามสกุล">
             <input type="text" id="c_phone" class="form-control mb-3" placeholder="เบอร์โทร">
             <textarea id="c_address" class="form-control mb-3" rows="5" placeholder="ที่อยู่ส่งของ"></textarea>
-            
             <div class="input-group">
                 <input type="text" id="searchInput" class="form-control bg-light text-dark" placeholder="ค้นชื่อ/เบอร์" onkeypress="if(event.key==='Enter') searchCust()">
                 <button class="btn btn-dark" onclick="searchCust()">ค้นหา</button>
             </div>
           </div>
         </div>
-        
         <div class="col-lg-8">
           <div class="report-card">
             <h5 class="fw-bold mb-4 text-primary">รายการสั่งซื้อ</h5>
@@ -145,9 +116,7 @@
 </div>
 
 <script>
-  // 🌟 ใส่ API URL ของคุณ
-  const API_URL = "https://script.google.com/macros/s/AKfycbzYpHp2zECX8XiuAGEJ4y_xnDOstWYssYmaJ89qPMFhvsHHEyecWr61X14XOgdlI66R1w/exec";
-  
+  const API_URL = "https://script.google.com/macros/s/AKfycbwueDY0az9W0EyOwaEGSvIorLoP02G2vpPfBZ-9KxQh3h-ZG7QDXHkb_OOxv5nylwmfhw/exec";
   let candleChart = null, iChart = null;
 
   async function callAPI(action, data = null, query = null) {
@@ -160,15 +129,10 @@
     } catch (e) { document.getElementById('loader').style.display = 'none'; return null; }
   }
 
-  // 🌓 ฟังก์ชันสลับธีม
   function toggleTheme() {
     document.body.classList.toggle('dark-mode');
     const icon = document.querySelector('#themeToggle i');
-    if(document.body.classList.contains('dark-mode')) {
-        icon.className = 'fa-solid fa-sun';
-    } else {
-        icon.className = 'fa-solid fa-moon';
-    }
+    icon.className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
   }
 
   async function login() {
@@ -224,43 +188,28 @@
           orderDate: document.getElementById('o_date').value, orderId: document.getElementById('o_id').value, item: document.getElementById('o_item').value,
           cost: Number(document.getElementById('o_cost').value), price: Number(document.getElementById('o_price').value), qty: Number(document.getElementById('o_qty').value), shipping: Number(document.getElementById('o_ship').value), discount: Number(document.getElementById('o_disc').value)
       };
-      if(!data.name || !data.orderId) return Swal.fire('เตือน', 'กรุณาระบุชื่อและออเดอร์', 'warning');
+      if(!data.name) return Swal.fire('เตือน', 'กรุณาระบุชื่อ', 'warning');
       const res = await callAPI("save", data);
       if(res && res.success) {
-          Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false });
+          Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1000, showConfirmButton: false });
           document.getElementById('o_item').value = "";
           const next = await callAPI("getNextIds");
           if(next) { document.getElementById('c_id').value = next.custId; document.getElementById('o_id').value = next.orderId; }
       }
   }
 
-  // 🔍 ระบบ Search อัจฉริยะ
   async function searchCust() {
       const q = document.getElementById('searchInput').value;
       if(!q) return;
       const res = await callAPI("search", null, q);
       if(res) {
-          // แจ้งเตือนเมื่อพบข้อมูล
-          Swal.fire({
-              icon: 'success',
-              title: 'พบข้อมูลลูกค้า',
-              html: `<div class="text-start"><b>รหัส:</b> ${res.id}<br><b>ชื่อ:</b> ${res.name}<br><b>เบอร์:</b> ${res.phone}<br><b>ซื้อสะสม:</b> ฿${res.totalSpent.toLocaleString()}</div>`,
-              timer: 3000
-          });
-          // ดึงข้อมูลโชว์ทุกช่อง
+          Swal.fire({ icon: 'success', title: 'พบข้อมูลลูกค้า', html: `<div class="text-start"><b>ชื่อ:</b> ${res.name}<br><b>ซื้อสะสม:</b> ฿${res.totalSpent.toLocaleString()}</div>`, timer: 2000 });
           document.getElementById('c_id').value = res.id;
           document.getElementById('c_name').value = res.name;
           document.getElementById('c_phone').value = res.phone;
           document.getElementById('c_address').value = res.address;
           document.getElementById('c_last_date').value = res.lastDate;
-      } else {
-          // แจ้งเตือนเมื่อไม่พบข้อมูล
-          Swal.fire({
-              icon: 'warning',
-              title: 'ไม่พบข้อมูล',
-              text: 'ไม่พบรายชื่อหรือเบอร์โทรนี้ในฐานข้อมูล',
-          });
-      }
+      } else { Swal.fire('ไม่พบข้อมูล', 'ไม่พบรายชื่อนี้ในระบบ', 'error'); }
   }
 </script>
 </body>
