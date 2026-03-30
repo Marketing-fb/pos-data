@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CH-MANAGEMENT Dashboard</title>
+  <title>CH-MANAGEMENT SYSTEM</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,8 +19,10 @@
     .nav-link { border: none !important; color: #64748b; font-weight: 600; cursor: pointer; border-radius: 12px !important; margin-right: 10px; }
     .nav-link.active { background: var(--primary) !important; color: white !important; }
     .report-card { background: var(--card); border-radius: 18px; padding: 15px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; }
-    .kpi-label { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
-    .kpi-val { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    .kpi-label { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
+    .kpi-val { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+    .cust-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; border-radius: 25px; padding: 25px; }
+    .cust-card .form-control { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; }
     #loginPage { position: fixed; inset: 0; background: var(--dark); display: flex; align-items: center; justify-content: center; z-index: 2000; }
     #loader { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 9999; justify-content: center; align-items: center; }
   </style>
@@ -46,64 +48,89 @@
   </ul>
 
   <div class="container-fluid p-4">
+    <div id="posSection">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="cust-card shadow">
+            <h5 class="fw-bold mb-4">ข้อมูลลูกค้า</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-6"><label class="small">ID</label><input type="text" id="c_id" class="form-control fw-bold text-center" readonly></div>
+              <div class="col-6"><label class="small">สั่งล่าสุด</label><input type="text" id="c_last_date" class="form-control text-center" readonly></div>
+            </div>
+            <input type="text" id="c_name" class="form-control mb-3" placeholder="ชื่อ-นามสกุล">
+            <input type="text" id="c_phone" class="form-control mb-3" placeholder="เบอร์โทร">
+            <textarea id="c_address" class="form-control mb-3" rows="5" placeholder="ที่อยู่ส่งของ"></textarea>
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control bg-light text-dark" placeholder="ค้นชื่อ/เบอร์">
+                <button class="btn btn-dark" onclick="searchCust()">ค้นหา</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="report-card">
+            <h5 class="fw-bold mb-4 text-primary">รายการสั่งซื้อ</h5>
+            <div class="row g-3 mb-3">
+              <div class="col-md-4"><label>วันที่</label><input type="date" id="o_date" class="form-control"></div>
+              <div class="col-md-4"><label>เลขที่บิล</label><input type="text" id="o_id" class="form-control bg-light fw-bold" readonly></div>
+              <div class="col-md-4"><label>สินค้า</label><input type="text" id="o_item" class="form-control"></div>
+            </div>
+            <div class="row g-3 mb-3 text-center">
+              <div class="col-4"><label>ต้นทุน</label><input type="number" id="o_cost" class="form-control text-danger fw-bold" value="0"></div>
+              <div class="col-4"><label>ราคาขาย</label><input type="number" id="o_price" class="form-control text-success fw-bold" value="0"></div>
+              <div class="col-4"><label>จำนวน</label><input type="number" id="o_qty" class="form-control" value="1"></div>
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-6"><label>ค่าส่ง</label><input type="number" id="o_ship" class="form-control" value="0"></div>
+              <div class="col-6"><label>ส่วนลด</label><input type="number" id="o_disc" class="form-control" value="0"></div>
+            </div>
+            <button class="btn btn-success w-100 py-3 rounded-4 fw-bold shadow" onclick="submitAll()">💾 บันทึกยอดขาย</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="biSection" style="display:none;">
-      <div class="row g-3 mb-4">
-        <div class="col-md-2 col-6"><div class="report-card border-start border-success border-4"><span class="kpi-label">ยอดขายวันนี้</span><div class="kpi-val text-success" id="kToday">฿0</div></div></div>
+      <div class="row g-3 mb-4 text-center">
+        <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">วันนี้</span><div class="kpi-val text-success" id="kToday">฿0</div></div></div>
         <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">เดือนนี้</span><div class="kpi-val" id="kMonth">฿0</div></div></div>
         <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">ปีนี้</span><div class="kpi-val" id="kYear">฿0</div></div></div>
-        <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">ยอดสะสมรวม</span><div class="kpi-val text-primary" id="kTotal">฿0</div></div></div>
+        <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">สะสมรวม</span><div class="kpi-val" id="kTotal">฿0</div></div></div>
         <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">กำไรรวม</span><div class="kpi-val text-success" id="kProfit">฿0</div></div></div>
-        <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">ลูกค้าทั้งหมด</span><div class="kpi-val" id="kCust">0</div></div></div>
+        <div class="col-md-2 col-6"><div class="report-card"><span class="kpi-label">ลูกค้า</span><div class="kpi-val" id="kCust">0</div></div></div>
       </div>
       <div class="row g-4">
         <div class="col-lg-8"><div class="report-card"><h6>ยอดขายรายวัน (Candlestick)</h6><div style="height: 380px;"><canvas id="candleChart"></canvas></div></div></div>
         <div class="col-lg-4"><div class="report-card text-center"><h6>สินค้าขายดี 5 อันดับ</h6><div style="height: 250px;"><canvas id="itemChart"></canvas></div><div id="itemLegend" class="mt-3 text-start small"></div></div></div>
       </div>
     </div>
-
-    <div id="posSection">
-      <div class="alert alert-info">กำลังโหลดหน้าบันทึกยอด...</div>
-    </div>
   </div>
 </div>
 
 <script>
-  // 🌟 [สำคัญที่สุด] ใส่ URL เว็บแอปของคุณที่นี่
-  const API_URL = "https://script.google.com/macros/s/AKfycbwK166T1PNA-CvN2tpoQObkuP6sTOu2Ey34mD4GWyjxySe72Bctitn45_vMitIhMUw1HQ/exec";
+  // 🌟 [สำคัญ] ใส่ API URL ของคุณที่นี่
+  const API_URL = "https://script.google.com/macros/s/AKfycbzYpHp2zECX8XiuAGEJ4y_xnDOstWYssYmaJ89qPMFhvsHHEyecWr61X14XOgdlI66R1w/exec";
   
-  let candleChart, iChart;
+  let candleChart = null, iChart = null;
 
   async function callAPI(action, data = null, query = null) {
     document.getElementById('loader').style.display = 'flex';
     try {
-      // 💡 จุดแก้ CORS: ไม่ส่ง Content-TypeHeader เพื่อให้ Browser มองเป็น Simple Request
-      const response = await fetch(API_URL, { 
-        method: 'POST', 
-        body: JSON.stringify({ action, data, query }) 
-      });
+      const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, data, query }) });
       const res = await response.json();
       document.getElementById('loader').style.display = 'none';
       return res;
-    } catch (e) { 
-      document.getElementById('loader').style.display = 'none'; 
-      console.error(e);
-      return null; 
-    }
+    } catch (e) { document.getElementById('loader').style.display = 'none'; return null; }
   }
 
   async function login() {
-    const pass = document.getElementById('passInput').value;
-    const res = await callAPI("login", { pass: pass });
+    const res = await callAPI("login", { pass: document.getElementById('passInput').value });
     if (res && res.success) {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('mainPage').style.display = 'block';
-      // โหลด ID อัตโนมัติ
       document.getElementById('c_id').value = res.nextIds.custId;
       document.getElementById('o_id').value = res.nextIds.orderId;
       document.getElementById('o_date').value = new Date().toISOString().split('T')[0];
-    } else { 
-      Swal.fire('Error', 'รหัสผ่านผิด หรือ ระบบขัดข้อง', 'error'); 
-    }
+    } else { Swal.fire('Error', 'รหัสผ่านผิดหรือระบบขัดข้อง', 'error'); }
   }
 
   function switchTab(tab) {
@@ -116,9 +143,7 @@
 
   async function loadBI() {
     const data = await callAPI("getDashboard");
-    if (!data || data.error) return;
-
-    // อัปเดตตัวเลข 6 ช่อง
+    if (!data) return;
     document.getElementById('kToday').innerText = '฿' + data.kpi.today.toLocaleString();
     document.getElementById('kMonth').innerText = '฿' + data.kpi.month.toLocaleString();
     document.getElementById('kYear').innerText = '฿' + data.kpi.year.toLocaleString();
@@ -126,24 +151,50 @@
     document.getElementById('kProfit').innerText = '฿' + data.kpi.profit.toLocaleString();
     document.getElementById('kCust').innerText = data.kpi.custCount.toLocaleString();
 
-    // กราฟแท่งเทียน
     const ctxC = document.getElementById('candleChart').getContext('2d');
     if(candleChart) candleChart.destroy();
     candleChart = new Chart(ctxC, {
       type: 'candlestick',
-      data: { datasets: [{ label: 'Daily Sales', data: data.chartData, color: { up: '#10b981', down: '#ef4444' } }] },
+      data: { datasets: [{ label: 'Sales', data: data.chartData, color: { up: '#10b981', down: '#ef4444' } }] },
       options: { responsive: true, maintainAspectRatio: false }
     });
 
-    // กราฟสัดส่วน
     const ctxP = document.getElementById('itemChart').getContext('2d');
     if(iChart) iChart.destroy();
     iChart = new Chart(ctxP, {
       type: 'doughnut',
       data: { labels: data.itemSummary.map(i => i.name), datasets: [{ data: data.itemSummary.map(i => i.value), backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'] }] },
-      options: { cutout: '75%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
     document.getElementById('itemLegend').innerHTML = data.itemSummary.map((i, idx) => `<div>● ${i.name}: ฿${i.value.toLocaleString()}</div>`).join('');
+  }
+
+  async function submitAll() {
+      const data = {
+          id: document.getElementById('c_id').value, name: document.getElementById('c_name').value, phone: document.getElementById('c_phone').value, address: document.getElementById('c_address').value,
+          orderDate: document.getElementById('o_date').value, orderId: document.getElementById('o_id').value, item: document.getElementById('o_item').value,
+          cost: Number(document.getElementById('o_cost').value), price: Number(document.getElementById('o_price').value), qty: Number(document.getElementById('o_qty').value), shipping: Number(document.getElementById('o_ship').value), discount: Number(document.getElementById('o_disc').value)
+      };
+      if(!data.name || !data.orderId) return Swal.fire('เตือน', 'กรุณาระบุชื่อและออเดอร์', 'warning');
+      const res = await callAPI("save", data);
+      if(res && res.success) {
+          Swal.fire('สำเร็จ', 'บันทึกข้อมูลแล้ว', 'success');
+          document.getElementById('o_item').value = "";
+          const next = await callAPI("getNextIds");
+          if(next) { document.getElementById('c_id').value = next.custId; document.getElementById('o_id').value = next.orderId; }
+      }
+  }
+
+  async function searchCust() {
+      const q = document.getElementById('searchInput').value;
+      const res = await callAPI("search", null, q);
+      if(res) {
+          document.getElementById('c_id').value = res.id;
+          document.getElementById('c_name').value = res.name;
+          document.getElementById('c_phone').value = res.phone;
+          document.getElementById('c_address').value = res.address;
+          document.getElementById('c_last_date').value = res.lastDate;
+      }
   }
 </script>
 </body>
